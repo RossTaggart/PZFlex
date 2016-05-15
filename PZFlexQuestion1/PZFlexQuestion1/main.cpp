@@ -24,10 +24,9 @@ public:
 	~Tree();
 	Node* Root() { return root; };
 	void addNode(int key);
-	void inOrder(Node* n);
-	void preOrder(Node* n);
-	void postOrder(Node* n);
 	int countNodes(Node* root);
+	bool compareTrees(Tree* otherTree);
+	bool compareNodes(Node* n1, Node* n2);
 private:
 	void addNode(int key, Node* leaf);
 	void freeNode(Node* leaf);
@@ -91,36 +90,6 @@ void Tree::addNode(int key, Node* leaf) {
 	}
 }
 
-// Print the tree in-order
-// Traverse the left sub-tree, root, right sub-tree
-void Tree::inOrder(Node* n) {
-	if (n) {
-		inOrder(n->Left());
-		cout << n->Key() << " ";
-		inOrder(n->Right());
-	}
-}
-
-// Print the tree pre-order
-// Traverse the root, left sub-tree, right sub-tree
-void Tree::preOrder(Node* n) {
-	if (n) {
-		cout << n->Key() << " ";
-		preOrder(n->Left());
-		preOrder(n->Right());
-	}
-}
-
-// Print the tree post-order
-// Traverse left sub-tree, right sub-tree, root
-void Tree::postOrder(Node* n) {
-	if (n) {
-		postOrder(n->Left());
-		postOrder(n->Right());
-		cout << n->Key() << " ";
-	}
-}
-
 //function to count the nodes in a tree
 int Tree::countNodes(Node* root)
 {
@@ -138,10 +107,55 @@ int Tree::countNodes(Node* root)
 	}
 }
 
+//compares the values of the nodes in the tree
+//to see if the trees are the same
+bool Tree::compareTrees(Tree* otherTree)
+{
+	bool areTreesSame;
+
+	Node* firstTree = this->Root();
+	Node* secondTree = otherTree->Root();
+
+	if (firstTree->Key() == secondTree->Key())
+	{
+		//roots are therefore the same
+		areTreesSame = this->compareNodes(firstTree, secondTree);
+	}
+	else
+	{
+		//roots are not the same therefore trees are not similar
+		areTreesSame = false;
+	}
+
+	return areTreesSame;
+}
+
+bool Tree::compareNodes(Node* n1, Node* n2)
+{
+	if (n1 || n2)
+	{
+		if (n1->Key() == n2->Key())
+		{
+			compareNodes(n1->Left(), n2->Left());
+			compareNodes(n1->Right(), n2->Right());
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return true;
+	}
+}
+
 int main()
 {
+	//creates new tree
 	Tree* tree1 = new Tree();
 
+	//fills tree 1 with nodes
 	tree1->addNode(10);
 	tree1->addNode(20);
 	tree1->addNode(30);
@@ -152,8 +166,10 @@ int main()
 
 	cout << "Tree 1 completed\n\n";
 
+	//creates second tree
 	Tree* tree2 = new Tree();
 
+	//fills second tree with nodes
 	tree2->addNode(10);
 	tree2->addNode(20);
 	tree2->addNode(30);
@@ -164,17 +180,29 @@ int main()
 
 	cout << "Tree 2 completed\n\n";
 
+	//compares structures of trees
 	cout << "Comparison of trees\n";
 	int numNodesTree1 = tree1->countNodes(tree1->Root());
 	int numNodesTree2 = tree2->countNodes(tree2->Root());
 
+	//tells the user if the structure of both trees are similar or not
 	if (numNodesTree1 == numNodesTree2)
 	{
 		cout << "Both trees have a similar structure as they contain the same number of nodes (" << numNodesTree1 << ").";
+
+		//checks to see if the values of the nodes in each tree are the same
+		bool areTreesSameValue = tree1->compareTrees(tree2);
+
+		//tells the user if the trees have the same values
+		if (areTreesSameValue == true)
+		{
+			cout << "Both trees have the same value, therefore are the same tree.";
+		}
 	}
 	else
 	{
 		cout << "Both trees have different structures, Tree 1 contains " << numNodesTree1 << " nodes, whilst tree 2 contains " << numNodesTree2 << " nodes.";
+		cout << "The trees are not identical.";
 	}
 
 	int in;
