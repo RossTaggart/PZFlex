@@ -130,6 +130,8 @@ bool Tree::compareTrees(Tree* otherTree)
 	return areTreesSame;
 }
 
+//compares the values of two nodes from two different
+//trees in the same position to see if they are the same
 bool Tree::compareNodes(Node* n1, Node* n2)
 {
 	if (n1 || n2)
@@ -150,6 +152,7 @@ bool Tree::compareNodes(Node* n1, Node* n2)
 	}
 }
 
+//main method
 int main()
 {
 	//creates new tree
